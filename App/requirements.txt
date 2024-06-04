@@ -1,0 +1,14 @@
+openai
+llama-index
+nltk
+langchain
+pyttsx3 
+SpeechRecognition
+gtts
+langchain_community
+sentence-transformers
+llama-index-embeddings-langchain
+openapi-schema-pydantic
+flask
+pygame
+PyAudio

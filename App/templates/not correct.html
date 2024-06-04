@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+</head>
+<body>
+    <h1>Chat Interface</h1>
+    
+    <!-- Display chat messages -->
+    <ul id="chat-messages">
+        {% for message in messages %}
+            <li>{{ message.role }}: {{ message.content }}</li>
+        {% endfor %}
+    </ul>
+    
+    <!-- Form to submit new message -->
+    <form id="chat-form">
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button type="submit">Send</button>
+    </form>
+
+    <!-- Button to view chat history -->
+    <button id="view-history-btn">View Chat History</button>
+
+    <!-- Script for handling form submission and updating chat -->
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var userInput = document.getElementById('user-input').value;
+            sendMessage(userInput);
+        });
+
+        function sendMessage(message) {
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_question: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Append user message to chat
+                var chatMessages = document.getElementById('chat-messages');
+                var userMessage = document.createElement('li');
+                userMessage.textContent = 'User: ' + message;
+                chatMessages.appendChild(userMessage);
+                
+                // Append assistant response to chat
+                var assistantMessage = document.createElement('li');
+                assistantMessage.textContent = 'Assistant: ' + data.response_text;
+                chatMessages.appendChild(assistantMessage);
+                
+                // Scroll to bottom of chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            });
+        }
+
+        // Add event listener to view history button
+        document.getElementById('view-history-btn').addEventListener('click', function() {
+            window.location.href = '/history'; // Redirect to history page
+        });
+    </script>
+</body>
+</html>
